@@ -10,18 +10,18 @@ function getRentalById(id: number, includeMovies = false) {
   return prisma.rental.findUnique({
     where: { id },
     include: {
-      movies: includeMovies
-    }
-  })
+      movies: includeMovies,
+    },
+  });
 }
 
 function getRentalsByUserId(userId: number, closed = true) {
   return prisma.rental.findMany({
     where: {
       userId,
-      closed
-    }
-  })
+      closed,
+    },
+  });
 }
 
 // FIXME: Esta é uma operação onde faria sentido o uso de TRANSACTIONS.
@@ -30,8 +30,10 @@ async function createRental(rentalInput: RentalInput) {
   const rental = await prisma.rental.create({
     data: {
       userId: rentalInput.userId,
-      endDate: new Date(new Date().getDate() + RENTAL_LIMITATIONS.RENTAL_DAYS_LIMIT),
-    }
+      endDate: new Date(
+        new Date().getDate() + RENTAL_LIMITATIONS.RENTAL_DAYS_LIMIT
+      ),
+    },
   });
 
   const { moviesId } = rentalInput;
@@ -45,8 +47,8 @@ async function finishRental(id: number) {
   await prisma.rental.update({
     where: { id },
     data: {
-      closed: true
-    }
+      closed: true,
+    },
   });
 }
 
@@ -55,8 +57,8 @@ async function connectMoviesToRental(moviesId: number[], rentalId: number) {
     const id = moviesId[i];
     await prisma.movie.update({
       data: { rentalId },
-      where: { id }
-    })
+      where: { id },
+    });
   }
 }
 
@@ -68,7 +70,7 @@ async function disconnectMoviesFromRental(rentalId: number) {
     await prisma.movie.update({
       where: { id },
       data: { rentalId: null },
-    })
+    });
   }
 }
 
@@ -77,5 +79,5 @@ export default {
   getRentalById,
   getRentalsByUserId,
   createRental,
-  finishRental
+  finishRental,
 };

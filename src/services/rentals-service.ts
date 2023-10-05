@@ -1,5 +1,4 @@
 import { User } from "@prisma/client";
-
 import { notFoundError } from "../errors/notfound-error";
 import { RentalInput } from "../protocols";
 import { movieAlreadyInRental } from "../errors/movie-inretal-error";
@@ -13,8 +12,8 @@ export const RENTAL_LIMITATIONS = {
   MIN: 1,
   MAX: 4,
   ADULTS_REQUIRED_AGE: 18,
-  RENTAL_DAYS_LIMIT: 3
-}
+  RENTAL_DAYS_LIMIT: 3,
+};
 
 async function getRentals() {
   const rentals = await rentalsRepository.getRentals();
@@ -55,7 +54,8 @@ async function getUserForRental(userId: number) {
 
 async function checkUserAbleToRental(userId: number) {
   const rentals = await rentalsRepository.getRentalsByUserId(userId, false);
-  if (rentals.length > 0) throw pendentRentalError("The user already have a rental!");
+  if (rentals.length > 0)
+    throw pendentRentalError("The user already have a rental!");
 }
 
 async function checkMoviesValidForRental(moviesId: number[], user: User) {
@@ -83,5 +83,5 @@ export default {
   getRentals,
   getRentalById,
   createRental,
-  finishRental
+  finishRental,
 };

@@ -6,9 +6,12 @@ export type ApplicationError = {
   message: string;
 };
 
-export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response, next: NextFunction) {
-  console.log(err);
-
+export function handleApplicationErrors(
+  err: ApplicationError | Error,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) {
   if (err.name === "ConflictError") {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message,
@@ -26,7 +29,8 @@ export function handleApplicationErrors(err: ApplicationError | Error, _req: Req
       message: err.message,
     });
   }
-
+  /* eslint-disable-next-line no-console */
+  console.log(next);
   /* eslint-disable-next-line no-console */
   console.log(err.name);
   res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
